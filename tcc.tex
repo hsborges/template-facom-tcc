@@ -1,0 +1,458 @@
+%==========================================================================
+% TEMPLATE DE TRABALHO DE CONCLUSÃO DE CURSO — GRADUAÇÃO / FACOM / UFMS
+% Baseado na classe abnTeX2
+%
+% COMO USAR:
+%   1. Preencha os campos marcados com <...> na seção "DADOS DO TRABALHO".
+%   2. Escreva os capítulos nos arquivos capN/*.tex.
+%   3. Adicione suas referências em referencias.bib.
+%   4. Compile na ordem: pdflatex -> bibtex -> pdflatex -> pdflatex
+%      (ou simplesmente: latexmk -pdf tcc.tex)
+%==========================================================================
+
+\documentclass[
+    % a opção draft remove as figuras e deixa a compilação mais leve
+    %draft,
+	% -- opções da classe memoir --
+	12pt,				% tamanho da fonte
+	openright,			% capítulos começam em pág ímpar (só tem efeito com twoside)
+	oneside,			% impressão apenas no anverso. Use twoside para verso e anverso
+	a4paper,			% tamanho do papel.
+	% -- opções da classe abntex2 --
+	%chapter=TITLE,		% títulos de capítulos convertidos em letras maiúsculas
+	%section=TITLE,		% títulos de seções convertidos em letras maiúsculas
+	%subsection=TITLE,	% títulos de subseções convertidos em letras maiúsculas
+	%subsubsection=TITLE,% títulos de subsubseções convertidos em letras maiúsculas
+	% -- opções do pacote babel --
+	english,			% idioma adicional para hifenização
+	brazil,				% o último idioma é o principal do documento
+	]{abntex2}
+
+% ---
+% PACOTES
+% ---
+
+% ---
+% Pacotes fundamentais
+% ---
+\usepackage{cmap}				% Mapear caracteres especiais no PDF
+\usepackage{lmodern}			% Usa a fonte Latin Modern
+\usepackage[T1]{fontenc}		% Selecao de codigos de fonte.
+\usepackage[utf8]{inputenc}		% Codificacao do documento (conversão automática dos acentos)
+\usepackage{lastpage}			% Usado pela Ficha catalográfica
+\usepackage{indentfirst}		% Indenta o primeiro parágrafo de cada seção.
+\usepackage{graphicx}			% Inclusão de gráficos
+\usepackage{amssymb}			% Para o comando \checkmark
+\usepackage[table,xcdraw]{xcolor}
+
+% Comandos auxiliares para marcação de revisão
+\newcommand{\red}[1]{{\color{red} #1}}     % para inserir texto em vermelho
+\newcommand{\ma}[1]{{\color{magenta} #1}}  % para inserir texto em magenta
+\newcommand{\blue}[1]{{\color{blue} #1}}   % para inserir texto em azul
+
+\usepackage{xurl}				% Quebra de URLs longas em qualquer ponto
+\renewcommand{\UrlFont}{\small}
+\usepackage{comment}			% incluir trechos de comentários
+\usepackage{xspace}
+\usepackage{multirow}
+\usepackage{hyperref}
+\usepackage{pdfpages}			% Inclusão de PDFs (ex.: ficha catalográfica)
+\usepackage{pdflscape}
+\usepackage{tabularx,ragged2e}
+\usepackage{subcaption}
+\usepackage{longtable}
+\usepackage{rotating}
+\usepackage{csquotes}
+\usepackage{placeins}
+\usepackage{amsmath}
+\usepackage{array}
+\renewcommand{\arraystretch}{1.2}
+
+% ---
+% Listagens de código
+% ---
+\usepackage{listings}
+\lstset{
+    basicstyle=\ttfamily\small,      % Define a fonte básica como "small"
+    keywordstyle=\color{blue},
+    commentstyle=\color{gray},
+    stringstyle=\color{green},
+    numbers=left,                    % Números nas linhas à esquerda
+    numberstyle=\tiny,               % Tamanho da fonte dos números
+    stepnumber=1,                    % Intervalo dos números
+    breaklines=true,                 % Quebra de linha automática
+    frame=single                     % Adiciona uma borda em torno do código
+}
+\usepackage{caption}
+\renewcommand{\lstlistingname}{Código}
+
+% --- Garantir legendas em português ---
+\addto\captionsbrazil{%
+  \renewcommand{\figurename}{Figura}%
+  \renewcommand{\tablename}{Tabela}%
+  \renewcommand{\bibname}{Referências}%
+}
+
+% --- Pacotes de citação carregados cedo para que abntex2abrev.sty use a
+%     definição memoir de \newfloat antes de pacotes como algorithm/float
+%     redefinirem o comando. NÃO mova estas duas linhas para o fim do preâmbulo. ---
+\usepackage[brazilian,hyperpageref]{backref}
+\usepackage[alf]{abntex2cite}		% Citações padrão ABNT (autor-data)
+%\usepackage[num]{abntex2cite}		% Alternativa: citações numéricas
+
+% --- Diagramas vetoriais em TikZ ---
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric, calc, fit}
+
+% --- Algoritmos (pseudocódigo em português) ---
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\floatname{algorithm}{Algoritmo}
+\renewcommand{\algorithmicrequire}{\textbf{Entrada:}}
+\renewcommand{\algorithmicensure}{\textbf{Saída:}}
+\renewcommand{\algorithmicfor}{\textbf{para}}
+\renewcommand{\algorithmicforall}{\textbf{para cada}}
+\renewcommand{\algorithmicdo}{\textbf{faça}}
+\renewcommand{\algorithmicend}{\textbf{fim}}
+\renewcommand{\algorithmicif}{\textbf{se}}
+\renewcommand{\algorithmicthen}{\textbf{então}}
+\renewcommand{\algorithmicelse}{\textbf{senão}}
+\renewcommand{\algorithmicwhile}{\textbf{enquanto}}
+\renewcommand{\algorithmicreturn}{\textbf{retorna}}
+% Nota: \EndFor, \EndIf e \EndWhile compõem automaticamente "fim para",
+% "fim se" e "fim enquanto" a partir das macros acima.
+
+% --- Coluna centralizada de largura fixa: use P{3cm} em tabelas ---
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+
+% --- Geração de texto fictício (remova ao escrever o conteúdo real) ---
+\usepackage{lipsum}
+
+% Fallback: define \fonte caso a versão do abnTeX2 não o forneça
+\providecommand{\fonte}[1]{\begin{flushleft}\footnotesize{Fonte: #1}\end{flushleft}}
+
+% ---
+% CONFIGURAÇÕES DE PACOTES
+% ---
+
+% ---
+% Configurações do pacote backref
+% ---
+\renewcommand{\backrefpagesname}{Citado na(s) página(s):~}
+\renewcommand{\backref}{}
+\renewcommand*{\backrefalt}[4]{
+	\ifcase #1 %
+		Nenhuma citação no texto.%
+	\or
+		Citado na página #2.%
+	\else
+		Citado #1 vezes nas páginas #2.%
+	\fi}%
+% --- Separadores em PT-BR (evita "and" entre páginas) ---
+\renewcommand*{\backreftwosep}{ e~}
+\renewcommand*{\backreflastsep}{ e~}
+% ---
+
+
+%==========================================================================
+% DADOS DO TRABALHO — PREENCHA OS CAMPOS ABAIXO
+%==========================================================================
+% Curso e grau. Exemplos:
+%   Ciência da Computação         / Bacharel em Ciência da Computação
+%   Engenharia de Software        / Bacharel em Engenharia de Software
+%   Engenharia de Computação      / Bacharel em Engenharia de Computação
+%   Sistemas de Informação        / Bacharel em Sistemas de Informação
+%   Análise e Desenvolvimento de Sistemas / Tecnólogo em Análise e Desenvolvimento de Sistemas
+\newcommand{\curso}{<Nome do Curso>}
+\newcommand{\grau}{Bacharel em <Nome do Curso>}
+
+\titulo{<Título do Trabalho>}
+\autor{<Nome Completo do Autor>}
+\local{Campo Grande, MS}
+\data{<Mês>, <Ano>}
+% Para orientadora, use o rótulo opcional:
+%   \orientador[Orientadora:]{Profa. Dra. <Nome da Orientadora>}
+\orientador{Prof. Dr. <Nome do Orientador>}
+% Coorientação (opcional) — descomente a linha correspondente:
+%\coorientador{Prof. Dr. <Nome do Coorientador>}
+%\coorientadora{Profa. Dra. <Nome da Coorientadora>}
+\instituicao{%
+  Universidade Federal de Mato Grosso do Sul -- UFMS
+  \par
+  Faculdade de Computação -- FACOM
+  \par
+  Curso de \curso}
+\tipotrabalho{Trabalho de Conclusão de Curso}
+% O preâmbulo deve conter a natureza do trabalho, o objetivo (grau
+% pretendido) e o nome da instituição
+\preambulo{Trabalho de Conclusão de Curso apresentado ao Curso de
+\curso{} da Faculdade de Computação da Universidade Federal de
+Mato Grosso do Sul, como requisito parcial para obtenção do grau
+de \grau.}
+%==========================================================================
+
+
+% ---
+% Configurações de aparência do PDF final
+% ---
+
+% alterando o aspecto da cor azul
+\definecolor{blue}{RGB}{41,5,195}
+
+% informações do PDF
+\makeatletter
+\hypersetup{
+     	%pagebackref=true,
+		pdftitle={\@title},
+		pdfauthor={\@author},
+    	pdfsubject={\imprimirpreambulo},
+	    pdfcreator={LaTeX with abnTeX2},
+		pdfkeywords={abnt}{latex}{abntex}{abntex2}{trabalho de conclusão de curso},
+		colorlinks=true,       		% false: boxed links; true: colored links
+    	linkcolor=blue,          	% color of internal links
+    	citecolor=blue,        		% color of links to bibliography
+    	filecolor=magenta,      	% color of file links
+		urlcolor=blue,
+		bookmarksdepth=4
+}
+\makeatother
+% ---
+
+% ---
+% Espaçamentos entre linhas e parágrafos
+% ---
+
+% O tamanho do parágrafo é dado por:
+\setlength{\parindent}{1.3cm}
+
+% Controle do espaçamento entre um parágrafo e outro:
+\setlength{\parskip}{0.2cm}  % tente também \onelineskip
+
+% ----
+% Início do documento
+% ----
+\begin{document}
+
+% Retira espaço extra obsoleto entre as frases.
+\frenchspacing
+
+% ----------------------------------------------------------
+% ELEMENTOS PRÉ-TEXTUAIS
+% ----------------------------------------------------------
+% \pretextual
+
+% ---
+% Capa
+% ---
+\imprimircapa
+% ---
+
+% ---
+% Folha de rosto
+% (o * indica que haverá a ficha catalográfica no verso)
+% ---
+\imprimirfolhaderosto*
+
+% ---
+% Ficha catalográfica
+% Se a biblioteca fornecer a ficha em PDF, comente o ambiente abaixo e use:
+%\includepdf{ficha_catalografica.pdf}
+% ---
+\begin{fichacatalografica}
+	\sffamily
+	\vspace*{\fill}					% Posição vertical
+	\begin{center}					% Minipage Centralizado
+	\fbox{\begin{minipage}[c][8cm]{13.5cm}		% Largura
+	\small
+	\imprimirautor
+	%Sobrenome, Nome do autor
+
+	\hspace{0.5cm} \imprimirtitulo  / \imprimirautor. --
+	\imprimirlocal, \imprimirdata-
+
+	\hspace{0.5cm} \pageref{LastPage} p. : il. (algumas color.) ; 30 cm.\\
+
+	\hspace{0.5cm} \imprimirorientadorRotulo~\imprimirorientador\\
+
+	\hspace{0.5cm}
+	\parbox[t]{12.5cm}{\imprimirtipotrabalho~--~\imprimirinstituicao}\\
+
+	\hspace{0.5cm}
+		1. <Palavra-chave 1>.
+		2. <Palavra-chave 2>.
+		I. \imprimirorientador.
+		II. Universidade Federal de Mato Grosso do Sul.
+		III. Faculdade de Computação.
+		IV. \imprimirtitulo\\
+
+	\hspace{8.75cm} CDU <número>\\
+	\end{minipage}}
+	\end{center}
+\end{fichacatalografica}
+
+% ----------------------------------------------------------
+% DEDICATÓRIA (opcional)
+% ----------------------------------------------------------
+%\begin{dedicatoria}
+%   \vspace*{\fill}
+%   \centering
+%   \noindent
+%   \textit{<Dedicatória>} \vspace*{\fill}
+%\end{dedicatoria}
+
+% ----------------------------------------------------------
+% AGRADECIMENTOS (opcional)
+% ----------------------------------------------------------
+\begin{agradecimentos}
+
+<Escreva aqui os agradecimentos. É costume agradecer à família, ao(à)
+orientador(a), aos professores, aos colegas de curso e à instituição.>
+
+<Se o trabalho recebeu apoio financeiro (por exemplo, bolsa de iniciação
+científica, tecnológica ou de extensão), mencione a agência ou o programa
+de fomento.>
+
+\end{agradecimentos}
+
+% ----------------------------------------------------------
+% EPÍGRAFE (opcional)
+% ----------------------------------------------------------
+%\begin{epigrafe}
+%    \vspace*{\fill}
+%    \begin{flushright}
+%        \textit{``<Texto da epígrafe>''}\\
+%        (<Autor da epígrafe>)
+%    \end{flushright}
+%\end{epigrafe}
+
+% ----------------------------------------------------------
+% RESUMO
+% ----------------------------------------------------------
+\begin{resumo}
+
+\noindent
+<Resumo em português, em parágrafo único, entre 150 e 250 palavras. Deve conter
+contextualização, problema, objetivo, método, principais resultados e conclusão.>
+
+\noindent
+\textbf{Palavras-chave}: <palavra-chave 1>, <palavra-chave 2>, <palavra-chave 3>.
+
+\end{resumo}
+
+% ----------------------------------------------------------
+% ABSTRACT (opcional)
+% ----------------------------------------------------------
+%\begin{resumo}[Abstract]
+%
+%\noindent
+%<Versão do resumo em inglês, com o mesmo conteúdo da versão em português.>
+%
+%\noindent
+%\textbf{Keywords}: <keyword 1>, <keyword 2>, <keyword 3>.
+%
+%\end{resumo}
+
+% ----------------------------------------------------------
+% LISTA DE FIGURAS
+% ----------------------------------------------------------
+\pdfbookmark[0]{\listfigurename}{lof}
+\listoffigures*
+\cleardoublepage
+
+% ----------------------------------------------------------
+% LISTA DE TABELAS
+% ----------------------------------------------------------
+\pdfbookmark[0]{\listtablename}{lot}
+\listoftables*
+\cleardoublepage
+
+% ----------------------------------------------------------
+% LISTA DE ABREVIATURAS E SIGLAS
+% ----------------------------------------------------------
+% Liste em ordem alfabética. Mantenha apenas as siglas usadas no texto.
+\begin{siglas}
+  \item[ABNT] Associação Brasileira de Normas Técnicas
+  \item[FACOM] Faculdade de Computação
+  \item[TCC] Trabalho de Conclusão de Curso
+  \item[UFMS] Universidade Federal de Mato Grosso do Sul
+  \item[<SIGLA>] <Significado da sigla>
+\end{siglas}
+
+% ----------------------------------------------------------
+% LISTA DE SÍMBOLOS (opcional)
+% ----------------------------------------------------------
+%\begin{simbolos}
+%  \item[$ \Gamma $] Letra grega Gama
+%\end{simbolos}
+
+% ----------------------------------------------------------
+% SUMÁRIO
+% ----------------------------------------------------------
+\pdfbookmark[0]{\contentsname}{toc}
+\tableofcontents*
+\clearpage
+% ---
+
+
+% ----------------------------------------------------------
+% ELEMENTOS TEXTUAIS
+% ----------------------------------------------------------
+\textual
+
+% ----------------------------------------------------------
+% ESTRUTURA DO TCC
+% Ajuste a quantidade e a ordem dos capítulos conforme seu trabalho.
+% ----------------------------------------------------------
+
+\include{cap1/introducao}
+
+\include{cap2/fundamentacao}
+
+\include{cap3/desenvolvimento}
+
+\include{cap4/resultados}
+
+\include{cap5/conclusao}
+
+% ---
+% Finaliza a parte no bookmark do PDF, para que se inicie o bookmark na raiz
+% ---
+\bookmarksetup{startatroot}%
+% ---
+
+% ----------------------------------------------------------
+% ELEMENTOS PÓS-TEXTUAIS
+% ----------------------------------------------------------
+\postextual
+
+% ----------------------------------------------------------
+% Referências bibliográficas
+% ----------------------------------------------------------
+\bibliography{referencias}
+
+% ----------------------------------------------------------
+% Apêndices (material elaborado pelo autor) — opcional
+% ----------------------------------------------------------
+\begin{apendicesenv}
+
+% Imprime uma página indicando o início dos apêndices
+\partapendices
+
+\include{apendices/apendice-a}
+
+\end{apendicesenv}
+% ---
+
+% ----------------------------------------------------------
+% Anexos (material NÃO elaborado pelo autor) — opcional
+% ----------------------------------------------------------
+%\begin{anexosenv}
+%
+%% Imprime uma página indicando o início dos anexos
+%\partanexos
+%
+%\chapter{<Título do Anexo>}
+%
+%\end{anexosenv}
+
+\end{document}
