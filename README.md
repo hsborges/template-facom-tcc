@@ -16,13 +16,22 @@ trabalho é **escrever o conteúdo**.
 
 ## 1. Escolha onde vai escrever
 
-### Opção A — Overleaf (mais fácil, nada para instalar)
+### Opção A — Overleaf da UFMS (recomendado)
+
+A UFMS mantém sua própria instância do Overleaf em **<https://latex.ufms.br>**.
+Você não precisa instalar nada nem criar conta: o acesso é feito com o
+**Passaporte UFMS**.
 
 1. Clique em **Code → Download ZIP** nesta página.
-2. No [Overleaf](https://www.overleaf.com), vá em **New Project → Upload Project**
-   e envie o ZIP.
-3. Abra **Menu** e confira: *Compiler* = `pdfLaTeX` e *Main document* = `tcc.tex`.
-4. Clique em **Recompile**.
+2. Entre em [latex.ufms.br](https://latex.ufms.br) com seu Passaporte UFMS.
+3. Vá em **New Project → Upload Project** e envie o ZIP.
+4. Abra **Menu** e confira: *Compiler* = `pdfLaTeX` e *Main document* = `tcc.tex`.
+5. Clique em **Recompile**.
+
+Para compartilhar o projeto com seu(sua) orientador(a), use o botão **Share**.
+
+> O mesmo procedimento funciona no [overleaf.com](https://www.overleaf.com),
+> caso você não tenha acesso ao Passaporte UFMS.
 
 ### Opção B — GitHub + computador (recomendado se você já usa Git)
 
